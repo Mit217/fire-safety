@@ -1,198 +1,99 @@
-\# Smart Fire Safety Compliance Database
-
-
+# Smart Fire Safety Compliance Database
 
 A simple DBMS project for managing fire safety inspections, violations, and corrective actions for buildings.
 
-
-
-\## Project Overview
-
-
+## Project Overview
 
 The Smart Fire Safety Compliance Database stores and manages information about:
 
+- Buildings
+- Fire safety inspectors
+- Inspections
+- Safety violations
+- Corrective actions
 
+The system uses **Oracle 19c** as the database backend and **PHP** for the basic web interface.
 
-\- Buildings
+## Technologies Used
 
-\- Fire safety inspectors
+- Oracle Database 19c
+- PHP
+- OCI8
+- XAMPP
+- HTML
+- CSS
+- Git & GitHub
 
-\- Inspections
-
-\- Safety violations
-
-\- Corrective actions
-
-
-
-The system uses \*\*Oracle 19c\*\* as the database backend and \*\*PHP\*\* for the basic web interface.
-
-
-
-\## Technologies Used
-
-
-
-\- Oracle Database 19c
-
-\- PHP
-
-\- OCI8
-
-\- XAMPP
-
-\- HTML
-
-\- CSS
-
-\- Git \& GitHub
-
-
-
-\## Database Structure
-
-
+## Database Structure
 
 The database contains five main tables:
 
-
-
-\### 1. BUILDING
-
-
+### 1. BUILDING
 
 Stores information about buildings.
 
+- `building_id` — Primary Key
+- `building_name`
+- `address`
+- `building_type`
+- `floors`
 
-
-\- `building\_id` — Primary Key
-
-\- `building\_name`
-
-\- `address`
-
-\- `building\_type`
-
-\- `floors`
-
-
-
-\### 2. INSPECTOR
-
-
+### 2. INSPECTOR
 
 Stores information about safety inspectors.
 
+- `inspector_id` — Primary Key
+- `inspector_name`
+- `phone`
 
-
-\- `inspector\_id` — Primary Key
-
-\- `inspector\_name`
-
-\- `phone`
-
-
-
-\### 3. INSPECTION
-
-
+### 3. INSPECTION
 
 Stores inspection details.
 
+- `inspection_id` — Primary Key
+- `building_id` — Foreign Key
+- `inspector_id` — Foreign Key
+- `inspection_date`
+- `status`
 
-
-\- `inspection\_id` — Primary Key
-
-\- `building\_id` — Foreign Key
-
-\- `inspector\_id` — Foreign Key
-
-\- `inspection\_date`
-
-\- `status`
-
-
-
-\### 4. VIOLATION
-
-
+### 4. VIOLATION
 
 Stores safety violations identified during inspections.
 
+- `violation_id` — Primary Key
+- `inspection_id` — Foreign Key
+- `violation_type`
+- `severity`
+- `status`
 
-
-\- `violation\_id` — Primary Key
-
-\- `inspection\_id` — Foreign Key
-
-\- `violation\_type`
-
-\- `severity`
-
-\- `status`
-
-
-
-\### 5. CORRECTIVE\_ACTION
-
-
+### 5. CORRECTIVE_ACTION
 
 Stores actions taken to resolve violations.
 
+- `action_id` — Primary Key
+- `violation_id` — Foreign Key
+- `action_description`
+- `status`
 
-
-\- `action\_id` — Primary Key
-
-\- `violation\_id` — Foreign Key
-
-\- `action\_description`
-
-\- `status`
-
-
-
-\## Database Relationships
-
-
+## Database Relationships
 
 ```text
-
 BUILDING
-
-&#x20;  |
-
-&#x20;  | 1 : M
-
-&#x20;  v
-
+   |
+   | 1 : M
+   v
 INSPECTION
-
-&#x20;  |
-
-&#x20;  | 1 : M
-
-&#x20;  v
-
+   |
+   | 1 : M
+   v
 VIOLATION
-
-&#x20;  |
-
-&#x20;  | 1 : M
-
-&#x20;  v
-
-CORRECTIVE\_ACTION
-
-
+   |
+   | 1 : M
+   v
+CORRECTIVE_ACTION
 
 INSPECTOR
-
-&#x20;  |
-
-&#x20;  | 1 : M
-
-&#x20;  v
-
+   |
+   | 1 : M
+   v
 INSPECTION
-
