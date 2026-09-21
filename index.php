@@ -156,7 +156,7 @@ if ($conn && $_SERVER['REQUEST_METHOD'] === 'POST') {
 $badgeMap = [
     'PASS' => 'ok', 'COMPLETED' => 'ok',
     'FAIL' => 'bad', 'OPEN' => 'bad', 'CRITICAL' => 'crit', 'HIGH' => 'high',
-    'PENDING' => 'warn', 'IN_PROGRESS' => 'warn', 'MEDIUM' => 'warn', 'LOW' => 'low',
+    'PENDING' => 'warn', 'IN_PROGRESS' => 'warn', 'MEDIUM' => 'warn', 'LOW' => 'low', 'MODERATE' => 'warn',
 ];
 
 function badge($v) {
@@ -273,9 +273,10 @@ if ($connected) {
     $totalViolations  = scalar($conn, 'SELECT COUNT(*) FROM violation');
     $openViolations   = scalar($conn, "SELECT COUNT(*) FROM violation WHERE status = 'OPEN'");
 
-    // Uses the PL/SQL function get_violation_count
+    // Uses PL/SQL functions get_violation_count and get_building_risk_level
     $buildings = q($conn, "SELECT building_id, building_name, address, building_type, floors,
-                                  get_violation_count(building_id) AS VIOLATIONS
+                                  get_violation_count(building_id) AS VIOLATIONS,
+                                  get_building_risk_level(building_id) AS RISK_LEVEL
                            FROM building ORDER BY building_id");
 
     $inspectors = q($conn, "SELECT inspector_id, inspector_name, phone FROM inspector ORDER BY inspector_id");
@@ -285,7 +286,7 @@ if ($connected) {
                              FROM inspection i
                              JOIN building b ON b.building_id = i.building_id
                              JOIN inspector ins ON ins.inspector_id = i.inspector_id
-                             ORDER BY i.inspection_date DESC, i.inspection_id DESC");
+                             ORDER BY i.inspection_id ASC");
 
     $violations = q($conn, "SELECT v.violation_id, b.building_name, v.violation_type, v.severity, v.status
                             FROM violation v
@@ -418,8 +419,8 @@ $flashErr = $_GET['err'] ?? null;
   <?php
   crud_section($conn, $E, $FK, 'building', $buildings, [
       'ID' => 'BUILDING_ID', 'Building' => 'BUILDING_NAME', 'Location' => 'ADDRESS',
-      'Type' => 'BUILDING_TYPE', 'Floors' => 'FLOORS', 'Violations' => 'VIOLATIONS'
-  ]);
+      'Type' => 'BUILDING_TYPE', 'Floors' => 'FLOORS', 'Violations' => 'VIOLATIONS', 'Risk Level' => 'RISK_LEVEL'
+  ], ['RISK_LEVEL']);
 
   crud_section($conn, $E, $FK, 'inspector', $inspectors, [
       'ID' => 'INSPECTOR_ID', 'Name' => 'INSPECTOR_NAME', 'Phone' => 'PHONE'
